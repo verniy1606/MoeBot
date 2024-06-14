@@ -24,7 +24,7 @@ export class MoeClient extends Client {
         this.once(Events.ClientReady, readyClient => {
             this.logger.log(`Logged in as ${readyClient.user.tag}`);
 
-            /* const foldersPath = path.join(__dirname, 'commands'); // ./commands/
+            const foldersPath = path.join(__dirname, 'commands'); // ./commands/
             const commandFolders = fs.readdirSync(foldersPath); // Read the contents of commands
 
             for (const folder of commandFolders) {
@@ -40,7 +40,7 @@ export class MoeClient extends Client {
                         this.logger.warning(`${filePath} 内容が不足しているため、読み込みを停止しました。`);
                     }
                 }
-            } */
+            }
         });
 
         this.on(Events.MessageCreate, async (message: Message) => {
@@ -53,6 +53,7 @@ export class MoeClient extends Client {
 
             if (contents.startsWith('<:') &&
                 contents.endsWith('>')) {
+                // 一部問題あり
                 const emojiId = contents.split(':')[2].slice(0, -1);
                 const url = `https://cdn.discordapp.com/emojis/${emojiId}.png`;
 
@@ -70,6 +71,7 @@ export class MoeClient extends Client {
 
                 message.channel.send({ embeds: [embed] });
                 this.logger.log(`The converted emoji was sent to '${message.channel.id}'`);
+                
                 if (message.deletable) {
                     message.delete();
                     this.logger.log(`The original emoji message ( ${message.content} (${message.id}) from ${message.author.username} ) has been deleted`);
