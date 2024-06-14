@@ -45,6 +45,7 @@ export class MoeClient extends Client {
 
         this.on(Events.MessageCreate, async (message: Message) => {
             if (message.author.bot) return;
+            
             this.logger.discord(`${message.content} [${message.createdAt.toLocaleString()}] ${message.author.displayName}@${message.author.username}`);
 
             const contents = message.content;
