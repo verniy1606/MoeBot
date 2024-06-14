@@ -45,9 +45,7 @@ export class MoeClient extends Client {
 
         this.on(Events.MessageCreate, async (message: Message) => {
             if (message.author.bot) return;
-
-            // ログが大変なことになるので一時的にログを無効にします
-            // this.logger.discord(`${message.content} [${message.createdAt.toLocaleString()}] ${message.author.displayName}@${message.author.username}`);
+            this.logger.discord(`${message.content} [${message.createdAt.toLocaleString()}] ${message.author.displayName}@${message.author.username}`);
 
             const contents = message.content;
 
@@ -71,7 +69,7 @@ export class MoeClient extends Client {
 
                 message.channel.send({ embeds: [embed] });
                 this.logger.log(`The converted emoji was sent to '${message.channel.id}'`);
-                
+
                 if (message.deletable) {
                     message.delete();
                     this.logger.log(`The original emoji message ( ${message.content} (${message.id}) from ${message.author.username} ) has been deleted`);
@@ -81,6 +79,7 @@ export class MoeClient extends Client {
     }
 
     start(token: string) {
+        this.logger.log("Logging in...");
         this.login(token);
     }
 }
