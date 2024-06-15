@@ -23,7 +23,7 @@ export class MoeClient extends Client {
 
         this.once(Events.ClientReady, readyClient => {
             this.logger.log(`Logged in as ${readyClient.user.tag}`);
-
+            return;
             const foldersPath = path.join(__dirname, 'commands'); // ./commands/
             const commandFolders = fs.readdirSync(foldersPath); // Read the contents of commands
 
@@ -45,7 +45,7 @@ export class MoeClient extends Client {
 
         this.on(Events.MessageCreate, async (message: Message) => {
             if (message.author.bot) return;
-            
+
             this.logger.discord(`${message.content} [${message.createdAt.toLocaleString()}] ${message.author.displayName}@${message.author.username}`);
 
             const contents = message.content;
@@ -55,6 +55,8 @@ export class MoeClient extends Client {
                 // 一部問題あり
                 const emojiId = contents.split(':')[2].slice(0, -1);
                 const url = `https://cdn.discordapp.com/emojis/${emojiId}.png`;
+
+                // if (isValidURL())
 
                 const embed = new EmbedBuilder()
                     .setTitle('Link')
