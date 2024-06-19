@@ -49,14 +49,17 @@ export class MoeClient extends Client {
             this.logger.discord(`${message.content} [${message.createdAt.toLocaleString()}] ${message.author.displayName}@${message.author.username}`);
 
             const contents = message.content;
+            const pattern = /.*:(.*)>/;
 
             if (contents.startsWith('<:') &&
                 contents.endsWith('>')) {
-                // 一部問題あり
-                const emojiId = contents.split(':')[2].slice(0, -1);
-                const url = `https://cdn.discordapp.com/emojis/${emojiId}.png`;
 
-                // if (isValidURL())
+                const match = contents.match(pattern);
+                if (!match) return;
+
+                // const emojiId = contents.split(':')[2].slice(0, -1);
+
+                const url = `https://cdn.discordapp.com/emojis/${match[1]}.png`;
 
                 const embed = new EmbedBuilder()
                     .setTitle('Link')
@@ -78,7 +81,8 @@ export class MoeClient extends Client {
                     this.logger.log(`The original emoji message ( ${message.content} (${message.id}) from ${message.author.username} ) has been deleted`);
                 }
             }
-        });
+        }
+        );
     }
 
     start(token: string) {
