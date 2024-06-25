@@ -1,3 +1,5 @@
 Lemme share my kusho code
-未完成プロジェクト
+
+# MoeBot
+
 DiscordのBot
