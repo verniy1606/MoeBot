@@ -1,12 +1,12 @@
-import { Client, Events, GatewayIntentBits, Message, EmbedBuilder, Partials, Collection } from 'discord.js';
+import { Client, Events, GatewayIntentBits, Message, Partials, Collection } from 'discord.js';
 import { Logger } from './utils/logger';
+import { CommandBase } from './commandBase';
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
 export class MoeClient extends Client {
-    logger: Logger;
-    commands: Collection<any, any>;
+    commands: Collection<string, CommandBase>;
 
     constructor() {
         super({
@@ -18,75 +18,49 @@ export class MoeClient extends Client {
             partials: [Partials.Message],
         });
 
-        this.logger = new Logger();
         this.commands = new Collection();
 
-        this.once(Events.ClientReady, readyClient => {
-            this.logger.log(`Logged in as ${readyClient.user.tag}`);
-            return;
-            const foldersPath = path.join(__dirname, 'commands'); // ./commands/
-            const commandFolders = fs.readdirSync(foldersPath); // Read the contents of commands
-
-            for (const folder of commandFolders) {
-                const commandsPath = path.join(foldersPath, folder);
-                const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-                for (const file of commandFiles) {
-                    const filePath = path.join(commandsPath, file);
-                    const command = require(filePath);
-
-                    if ('data' in command && 'execute' in command) {
-                        this.commands.set(command.data.name, command);
-                    } else {
-                        this.logger.warning(`${filePath} 内容が不足しているため、読み込みを停止しました。`);
-                    }
-                }
+        const directoryPath = path.join(__dirname, 'commands');
+        fs.readdir(directoryPath, (err, files) => {
+            if (err) {
+                Logger.error(`Unable to scan directory: ${err}`);
+                return;
             }
+
+            files.forEach((file) => {
+                if (path.extname(file) === '.ts') {
+                    Logger.log(`Reading ${file}...`);
+
+                    const modulePath = path.join(directoryPath, file);
+                    const commandModule: CommandBase = require(modulePath).default;
+                    this.commands.set(commandModule.name, commandModule);
+
+                    Logger.log(`Successfully loaded ${commandModule.name}`);
+                }
+            });
+        })
+
+        this.once(Events.ClientReady, readyClient => {
+            Logger.log(`Logged in as ${readyClient.user.tag}`);
         });
 
         this.on(Events.MessageCreate, async (message: Message) => {
             if (message.author.bot) return;
+            if (!message.guild) return;
 
-            this.logger.discord(`${message.content} [${message.createdAt.toLocaleString()}] ${message.author.displayName}@${message.author.username}`);
+            Logger.discord(`${message.content} [${message.createdAt.toLocaleString()}] ${message.author.displayName}@${message.author.username}`);
 
-            const contents = message.content;
-            const pattern = /.*:(.*)>/;
-
-            if (contents.startsWith('<:') &&
-                contents.endsWith('>')) {
-
-                const match = contents.match(pattern);
-                if (!match) return;
-
-                // const emojiId = contents.split(':')[2].slice(0, -1);
-
-                const url = `https://cdn.discordapp.com/emojis/${match[1]}.png`;
-
-                const embed = new EmbedBuilder()
-                    .setTitle('Link')
-                    .setURL(url)
-                    .setAuthor({
-                        name: `${message.author.displayName} (${message.author.username})`,
-                        iconURL: message.author.displayAvatarURL({ extension: 'png' }) ?? 'Failed to get user icon'
-                    })
-                    .setImage(url)
-                    // .setFields({ name: `${message.author.username}がアイコンを送信しました。`, value: `a` })
-                    .setColor('Random')
-                    .setTimestamp();
-
-                message.channel.send({ embeds: [embed] });
-                this.logger.log(`The converted emoji was sent to '${message.channel.id}'`);
-
-                if (message.deletable) {
-                    message.delete();
-                    this.logger.log(`The original emoji message ( ${message.content} (${message.id}) from ${message.author.username} ) has been deleted`);
+            this.commands.forEach((command) => {
+                if (command.wantExecute(message.content)) {
+                    command.execute(message);
                 }
-            }
+            });
         }
         );
     }
 
     start(token: string) {
-        this.logger.log("Logging in...");
+        Logger.log("Logging in...");
         this.login(token);
     }
 }
