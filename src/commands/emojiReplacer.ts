@@ -7,10 +7,9 @@ const command: CommandBase = {
     name: 'emojiReplacer',
     execute: (message: Message) => {
         Logger.log(`execute executed! ${message.content}`);
-        return;
 
-        // const url = `https://cdn.discordapp.com/emojis/${match[1]}.png`;
-        const url = '';
+        const emojiId = message.content.split(':')[2].slice(0, -1);
+        const url = `https://cdn.discordapp.com/emojis/${emojiId}.png`;
 
         const embed = new EmbedBuilder()
             .setTitle('Link')
@@ -34,18 +33,12 @@ const command: CommandBase = {
     },
     wantExecute: (contents: string) => {
         Logger.log(`wantExecute executed! ${contents}`);
+
+        const pattern = /^<:\w+:\d+>$/;
+
+        if (pattern.test(contents)) return true;
+
         return false;
-        
-        const pattern = /.*:(.*)>/;
-
-        if (contents.startsWith('<:') &&
-            contents.endsWith('>')) {
-
-            const match = contents.match(pattern);
-            if (!match) return false;
-
-        }
-        return true;
     }
 }
 
