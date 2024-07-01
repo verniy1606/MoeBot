@@ -19,6 +19,10 @@ export class MoeClient extends Client {
         });
 
         this.commands = new Collection();
+        
+        this.once(Events.ClientReady, readyClient => {
+            Logger.log(`Logged in as ${readyClient.user.tag}`);
+        });
 
         const directoryPath = path.join(__dirname, 'commands');
         fs.readdir(directoryPath, (err, files) => {
@@ -40,9 +44,6 @@ export class MoeClient extends Client {
             });
         })
 
-        this.once(Events.ClientReady, readyClient => {
-            Logger.log(`Logged in as ${readyClient.user.tag}`);
-        });
 
         this.on(Events.MessageCreate, async (message: Message) => {
             if (message.author.bot) return;
