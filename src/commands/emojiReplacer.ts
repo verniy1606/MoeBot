@@ -27,7 +27,7 @@ const command: CommandBase = {
             message.channel.messages.fetch(`${originalMessageId}`)
                 .then(message => {
                     message.reply({ embeds: [embed] });
-                }).catch();
+                }).catch(err => Logger.error(`${err}`));
         } else {
 
             message.channel.send({ embeds: [embed] });
