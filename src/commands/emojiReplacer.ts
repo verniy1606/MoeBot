@@ -20,7 +20,19 @@ const command: CommandBase = {
             .setColor('Random')
             .setTimestamp();
 
-        message.channel.send({ embeds: [embed] });
+
+        if (message.reference) {
+            Logger.log("Reference");
+            const originalMessageId = message.reference.messageId;
+            message.channel.messages.fetch(`${originalMessageId}`)
+                .then(message => {
+                    message.reply({ embeds: [embed] });
+                }).catch();
+        } else {
+
+            message.channel.send({ embeds: [embed] });
+        }
+
         Logger.log(`The converted emoji was sent to '${message.channel.id}'`);
 
         if (message.deletable) {
