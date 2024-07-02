@@ -19,7 +19,6 @@ const command: CommandBase = {
                 iconURL: message.author.displayAvatarURL({ extension: 'png' }) ?? 'Failed to get user icon'
             })
             .setImage(url)
-            // .setFields({ name: `${message.author.username}がアイコンを送信しました。`, value: `a` })
             .setColor('Random')
             .setTimestamp();
 
