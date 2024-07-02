@@ -6,8 +6,6 @@ import { Logger } from '../utils/logger';
 const command: CommandBase = {
     name: 'emojiReplacer',
     execute: (message: Message) => {
-        Logger.log(`execute executed! ${message.content}`);
-
         const emojiId = message.content.split(':')[2].slice(0, -1);
         const url = `https://cdn.discordapp.com/emojis/${emojiId}.png`;
 
@@ -31,8 +29,6 @@ const command: CommandBase = {
         }
     },
     wantExecute: (contents: string) => {
-        Logger.log(`wantExecute executed! ${contents}`);
-
         const pattern = /^<:\w+:\d+>$/;
 
         if (pattern.test(contents)) return true;
