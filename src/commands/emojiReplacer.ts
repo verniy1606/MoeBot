@@ -10,8 +10,8 @@ const command: CommandBase = {
         const url = `https://cdn.discordapp.com/emojis/${emojiId}.png`;
 
         const embed = new EmbedBuilder()
-            .setTitle('Link')
-            .setURL(url)
+            // .setTitle('Link')
+            // .setURL(url)
             .setAuthor({
                 name: `${message.author.displayName} (${message.author.username})`,
                 iconURL: message.author.displayAvatarURL({ extension: 'png' }) ?? 'Failed to get user icon'
