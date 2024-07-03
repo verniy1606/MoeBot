@@ -22,7 +22,6 @@ const command: CommandBase = {
 
 
         if (message.reference) {
-            Logger.log("Reference");
             const originalMessageId = message.reference.messageId;
             message.channel.messages.fetch(`${originalMessageId}`)
                 .then(message => {
