@@ -2,7 +2,6 @@ using Discord;
 using Discord.WebSocket;
 
 namespace MoeBot.Command {
-
     internal interface ISlashCommand {
         /// <summary>
         /// Get the name of the command
@@ -15,7 +14,7 @@ namespace MoeBot.Command {
         /// </summary>
         /// <returns>The instance</returns>
         SlashCommandBuilder GetInstance();
-        
+
         /// <summary>
         /// Execute the command
         /// </summary>

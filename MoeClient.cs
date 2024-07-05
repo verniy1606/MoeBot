@@ -77,7 +77,6 @@ namespace MoeBot {
                         // await guild.CreateApplicationCommandAsync(slashCommand.GetInstance().Build());
                         await this.CreateGlobalApplicationCommandAsync(slashCommand.GetInstance().Build());
                     };
-
                 } catch (Exception ex) {
                     Logger.Error($"An exception caused: {ex}");
                 }
