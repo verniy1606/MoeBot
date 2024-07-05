@@ -22,6 +22,7 @@ namespace MoeBot {
         }
 
         private async Task ClientSlashCommandExecuted(SocketSlashCommand socketSlashCommand) {
+            Logger.DiscordCommand($"/{socketSlashCommand.Data.Name} ({socketSlashCommand.User})");
             if (socketSlashCommand.User.IsBot) return;
 
             string slashCommandName = socketSlashCommand.Data.Name;
@@ -29,7 +30,7 @@ namespace MoeBot {
             foreach (ISlashCommand slashCommand in SlashCommands) {
                 if (slashCommand.GetInstance().Name != slashCommandName) return;
 
-                Logger.Log($"{slashCommandName} caused !");
+                Logger.DiscordCommand($"Execute {slashCommandName}.....");
                 await slashCommand.Execute(socketSlashCommand);
 
                 break;
