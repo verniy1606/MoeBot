@@ -32,12 +32,8 @@ namespace MoeBot.Command.MessageCommands {
             .WithCurrentTimestamp();
 
             var reference = socketMessage.Reference;
-            
-            if (reference != null) {
-                await socketMessage.Channel.SendMessageAsync(embed: embedBuilder.Build(), messageReference: reference);
-            } else {
-                await socketMessage.Channel.SendMessageAsync(embed: embedBuilder.Build());
-            }
+
+            await socketMessage.Channel.SendMessageAsync(embed: embedBuilder.Build(), messageReference: reference);
 
             await socketMessage.DeleteAsync();
         }
