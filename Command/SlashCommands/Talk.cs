@@ -22,6 +22,7 @@ namespace MoeBot.Command.SlashCommands {
         }
 
         public async Task Execute(SocketSlashCommand slashCommand) {
+            await slashCommand.RespondAsync("Yatta yo ~ !", ephemeral: true);
             await slashCommand.Channel.SendMessageAsync(slashCommand.Data.Options.First().Value.ToString());
         }
     }
