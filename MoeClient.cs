@@ -43,21 +43,19 @@ namespace MoeBot {
         }
 
         private async Task ClientReady() {
-
             var guild = this.GetGuild(BotInfo.GuildId);
 
-            if (guild == null) {
+            if (guild != null) {
+                try {
+                    foreach (ISlashCommand slashCommand in SlashCommands) {
+                        await guild.CreateApplicationCommandAsync(slashCommand.GetInstance().Build());
+                    };
+
+                } catch (Exception ex) {
+                    Logger.Error($"An exception caused: {ex}");
+                }
+            } else {
                 Logger.Warning("The guild is null!");
-                return;
-            }
-
-            try {
-                foreach (ISlashCommand slashCommand in SlashCommands) {
-                    await guild.CreateApplicationCommandAsync(slashCommand.GetInstance().Build());
-                };
-
-            } catch (Exception ex) {
-                Logger.Error($"An exception caused: {ex}");
             }
         }
 
