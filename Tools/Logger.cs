@@ -16,6 +16,11 @@ namespace MoeBot.Tools {
             Log($"{dateTime.ToString("HH:mm:ss")} Command     {message}", ConsoleColor.Blue);
         }
 
+        internal static void DiscordMessage(string message) {
+            DateTime dateTime = DateTime.Now;
+            Log($"{dateTime.ToString("HH:mm:ss")} Message     {message}", ConsoleColor.Green);    
+        }
+
         internal static void Error(string message) {
             DateTime dateTime = DateTime.Now;
             Log($"{dateTime.ToString("HH:mm:ss")} Error       {message}", ConsoleColor.Red);
