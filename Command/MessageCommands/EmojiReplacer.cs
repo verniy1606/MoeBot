@@ -12,8 +12,6 @@ namespace MoeBot.Command.MessageCommands {
         }
 
         public bool WantExecute(string messageContent) {
-            Logger.DiscordCommand($"Call WantExecute: {messageContent}");
-
             bool result = Regex.IsMatch(messageContent, @"^<:\w+:\d+>$");
 
             return result;

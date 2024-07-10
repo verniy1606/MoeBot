@@ -33,7 +33,6 @@ namespace MoeBot {
         }
 
         private async Task ClientMessageReceived(SocketMessage socketMessage) {
-            Logger.DiscordMessage($"{socketMessage.Content} ({socketMessage.Author})");
             if (socketMessage.Author.IsBot) return;
 
             foreach (IMessageCommand messageCommand in MessageCommands) {
